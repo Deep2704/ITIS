@@ -18,6 +18,8 @@ const Register = () => {
     password: "",
     cpassword: "",
   });
+  const [timer, setTimer] = useState(null);
+  const [remainingTime, setRemainingTime] = useState(0);
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
@@ -29,7 +31,9 @@ const Register = () => {
 
   const validateForm = (values) => {
     const error = {};
-    const regex = /^[^\s+@]+\@[^\s@]+\.[^\s@]{2,}$/i;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
+
     if (!values.fname) {
       error.fname = "First Name is required";
     }
@@ -38,15 +42,13 @@ const Register = () => {
     }
     if (!values.email) {
       error.email = "Email is required";
-    } else if (!regex.test(values.email)) {
+    } else if (!emailRegex.test(values.email)) {
       error.email = "This is not a valid email format!";
     }
     if (!values.password) {
       error.password = "Password is required";
-    } else if (values.password.length < 4) {
-      error.password = "Password must be more than 4 characters";
-    } else if (values.password.length > 10) {
-      error.password = "Password cannot exceed more than 10 characters";
+    } else if (!passwordRegex.test(values.password)) {
+      error.password = "Password must be at least 10 characters long, contain uppercase and lowercase letters, numbers, and symbols.";
     }
     if (!values.cpassword) {
       error.cpassword = "Confirm Password is required";
@@ -58,40 +60,38 @@ const Register = () => {
 
   const sendVerificationEmail = async () => {
     try {
-      console.log('sendVerificationEmail called');
-      const response = await axios.post("http://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com:5000/send-verification-email", { email: user.email });
-      console.log(response.data);
+      const response = await axios.post("http://127.0.0.1:5000/send-verification-email", { email: user.email });
       setVerificationMessage("Verification email sent. Please check your inbox.");
+      startTimer(2 * 60); // Start a 2-minute timer
     } catch (error) {
-      console.error("Error sending verification email:", error);
       setVerificationMessage("Error sending verification email. Please try again.");
     }
   };
-  
+
   const verifyEmailCode = async () => {
     try {
-      const response = await axios.post("http://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com:5000/verify-email-code", { email: user.email, code: verificationCode });
+      const response = await axios.post("http://127.0.0.1:5000/verify-email-code", { email: user.email, code: verificationCode });
       if (response.data.success) {
         setIsEmailVerified(true);
         setVerificationMessage("Email verified successfully.");
+        clearTimer();
       } else {
-        setVerificationMessage("Invalid verification code. Please try again.");
+        setVerificationMessage(response.data.message);
       }
     } catch (error) {
-      console.error("Error verifying code:", error);
       setVerificationMessage("Error verifying code. Please try again.");
     }
   };
-  
+
   const signupHandler = (e) => {
     e.preventDefault();
     setFormErrors(validateForm(user));
     setIsSubmit(true);
   };
-  
+
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit && isEmailVerified) {
-      axios.post("http://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com:5000/signup", user)
+      axios.post("http://127.0.0.1:5000/signup", user)
         .then((res) => {
           alert(res.data.message);
           navigate("/login", { replace: true });
@@ -103,7 +103,31 @@ const Register = () => {
       setVerificationMessage("Please verify your email before signing up.");
     }
   }, [formErrors, isSubmit, isEmailVerified, navigate, user]);
-  
+
+  const startTimer = (duration) => {
+    let time = duration;
+    setRemainingTime(time);
+
+    const timerInterval = setInterval(() => {
+      time -= 1;
+      setRemainingTime(time);
+
+      if (time <= 0) {
+        clearInterval(timerInterval);
+        setVerificationMessage("Verification code has expired. Please request a new code.");
+        setIsEmailVerified(false);
+      }
+    }, 1000);
+
+    setTimer(timerInterval);
+  };
+
+  const clearTimer = () => {
+    if (timer) {
+      clearInterval(timer);
+      setTimer(null);
+    }
+  };
 
   return (
     <div className={registerstyle.register}>
@@ -161,6 +185,7 @@ const Register = () => {
             <a onClick={verifyEmailCode} className={registerstyle.verifyCodeText}>Verify Code</a>
           </div>
           <p className={registerstyle.verificationMessage}>{verificationMessage}</p>
+          {remainingTime > 0 && <p className={registerstyle.verificationMessage}>Time remaining: {Math.floor(remainingTime / 60)}:{remainingTime % 60}</p>}
         </div>
         <div className={registerstyle.registerInputContainer}>
           <label className={registerstyle.registerLabel}>Password</label>

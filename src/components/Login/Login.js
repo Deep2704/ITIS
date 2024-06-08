@@ -44,20 +44,21 @@ const Login = ({ setUserState }) => {
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      axios.post("http://127.0.0.1:5000/login", user, {
+      axios.post("http://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com:5000/login", user, {
         headers: {
           'Content-Type': 'application/json',
         },
       }).then((res) => {
         if (res.data.success) {
-          setUserState(res.data.user);
           localStorage.setItem("token", res.data.token);
+          setUserState(res.data.user);
           navigate("/welcome", { replace: true });
         } else {
           alert(res.data.message || "Login failed");
         }
         setIsSubmit(false);
       }).catch((error) => {
+        console.error("Error during login:", error);
         alert("Error: " + error.message);
         setIsSubmit(false);
       });
@@ -65,20 +66,27 @@ const Login = ({ setUserState }) => {
   }, [formErrors, isSubmit, navigate, setUserState, user]);
 
   const handleGoogleSuccess = (response) => {
-    axios.get(`http://127.0.0.1:5000/login/google?code=${response.code}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((res) => {
-      setUserState(res.data.user);
-      localStorage.setItem("token", res.data.token);
-      navigate("/welcome", { replace: true });
-    }).catch((error) => {
-      alert("Error: " + error.message);
-    });
+    console.log("Google OAuth Success:", response);
+    axios
+      .post(`http://127.0.0.1:5000/auth/google/callback`, { code: response.code }, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log("Google OAuth Callback Response:", res);
+        localStorage.setItem("token", res.data.token);
+        setUserState(res.data.user);
+        navigate("/welcome", { replace: true });
+      })
+      .catch((error) => {
+        console.error("Error during Google OAuth callback:", error);
+        alert("Error: " + error.message);
+      });
   };
 
   const handleGoogleFailure = (error) => {
+    console.error("Google OAuth Failure:", error);
     alert("Google login failed");
   };
 
