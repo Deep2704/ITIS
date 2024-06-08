@@ -1,0 +1,115 @@
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('../../assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.90);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 350px; /* Adjust the width as needed */
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.inputContainer {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #333;
+  text-align: left; /* Align label text to the left */
+}
+
+.inputField {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  max-width: 320px; /* Ensure the input field width matches the button */
+}
+
+.loginButton {
+  margin: 20px 0;
+  padding: 10px;
+  width: 100%;
+  max-width: 320px; /* Ensure the button width matches the input fields */
+  border: none;
+  border-radius: 5px;
+  background: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.loginButton:hover {
+  background: #0056b3;
+}
+
+.forgotPassword {
+  margin-top: 10px;
+  color: #007acc;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.newUser {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.newUser span {
+  font-size: 14px;
+}
+
+.signupButton {
+  margin-left: 5px;
+  color: #007acc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.oauth {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.close-button {
+  align-self: flex-end;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.remember-me input {
+  margin-right: 10px;
+}
