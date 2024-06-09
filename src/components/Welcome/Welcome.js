@@ -18,7 +18,7 @@ const Welcome = ({ user, setUserState }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get('http://127.0.0.1:5000/user', {
+      axios.get('https://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com/api/user', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -39,7 +39,7 @@ const Welcome = ({ user, setUserState }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get('http://127.0.0.1:5000/books', {
+      axios.get('https://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com/api/books', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -56,7 +56,7 @@ const Welcome = ({ user, setUserState }) => {
 
   const searchHandler = (e) => {
     e.preventDefault();
-    axios.get(`http://127.0.0.1:5000/books/search?q=${search}`, {
+    axios.get(`https://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com/api/books/search?q=${search}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
@@ -65,6 +65,12 @@ const Welcome = ({ user, setUserState }) => {
     }).catch(err => {
       console.error(err);
     });
+  };
+
+   const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      searchHandler(e);
+    }
   };
 
   const addBookHandler = (e) => {
@@ -77,7 +83,7 @@ const Welcome = ({ user, setUserState }) => {
     formData.append('file', file);
     formData.append('cover', cover);
 
-    axios.post('http://127.0.0.1:5000/add-book', formData, {
+    axios.post('https://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com/api/add-book', formData, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'multipart/form-data'
@@ -118,11 +124,11 @@ const Welcome = ({ user, setUserState }) => {
     <div className={welcomeStyle.container}>
       <aside className={welcomeStyle.sidebar}>
         <div className={welcomeStyle.sidebarHeader}>
-          <h2>Libraro</h2>
+          <h2>Library</h2>
           <div className={welcomeStyle.userInfo}>
             <div className={welcomeStyle.userAvatar}></div>
             <div>
-              <p>{user.fname} {user.lname}</p>
+              <p style={{color:"white"}}>{user.fname} {user.lname}</p>
               <span>Online</span>
             </div>
           </div>
@@ -136,21 +142,20 @@ const Welcome = ({ user, setUserState }) => {
         </nav>
       </aside>
       <main className={welcomeStyle.mainContent}>
-        <div className={welcomeStyle.searchSection}>
-          <div className={welcomeStyle.searchContainer}>
-            <form onSubmit={searchHandler} className={welcomeStyle.searchForm}>
+     <div className={welcomeStyle.searchSection}>
+         {/* <form  className={welcomeStyle.searchForm}> */}
+            <div className={welcomeStyle.searchContainer} onSubmit={searchHandler} >
+             <i className="fas fa-search" style={{ margin: '0 5px', color: '#777' }}></i>
               <input
-                type="text"
+                type='text'
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search"
+                placeholder='Search'
+                onKeyPress={handleKeyPress}
                 className={welcomeStyle.searchInput}
               />
-              <button type="submit" className={welcomeStyle.searchButton}>
-                <i className="fas fa-search"></i>
-              </button>
-            </form>
-          </div>
+            </div>
+          {/* </form> */}
         </div>
         {showAddBook ? (
           <section className={welcomeStyle.adminSection}>

@@ -35,7 +35,7 @@ const ResetPassword = () => {
       setFormErrors(errors);
       return;
     }
-    axios.post("http://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com:5000/reset-password", { email, code, new_password: newPassword })
+    axios.post("https://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com/api/reset-password", { email, code, new_password: newPassword })
       .then((res) => {
         setMessage(res.data.message);
         navigate("/login");
@@ -48,7 +48,7 @@ const ResetPassword = () => {
 
   return (
     <div className={resetstyle.reset}>
-      <form onSubmit={handlePasswordReset}>
+      <form onSubmit={handlePasswordReset} className="reset-form">
         <h1>Reset Password</h1>
         <div className={resetstyle.inputContainer}>
           <input

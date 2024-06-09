@@ -60,7 +60,7 @@ const Register = () => {
 
   const sendVerificationEmail = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:5000/send-verification-email", { email: user.email });
+      const response = await axios.post("https://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com/api/send-verification-email", { email: user.email });
       setVerificationMessage("Verification email sent. Please check your inbox.");
       startTimer(2 * 60); // Start a 2-minute timer
     } catch (error) {
@@ -70,7 +70,7 @@ const Register = () => {
 
   const verifyEmailCode = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:5000/verify-email-code", { email: user.email, code: verificationCode });
+      const response = await axios.post("https://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com/api/verify-email-code", { email: user.email, code: verificationCode });
       if (response.data.success) {
         setIsEmailVerified(true);
         setVerificationMessage("Email verified successfully.");
@@ -91,7 +91,7 @@ const Register = () => {
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit && isEmailVerified) {
-      axios.post("http://127.0.0.1:5000/signup", user)
+      axios.post("https://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com/api/signup", user)
         .then((res) => {
           alert(res.data.message);
           navigate("/login", { replace: true });
@@ -131,7 +131,7 @@ const Register = () => {
 
   return (
     <div className={registerstyle.register}>
-      <form>
+      <form class>
         <h1>Create your account</h1>
         <div className={registerstyle.registerInputContainer}>
           <label className={registerstyle.registerLabel}>First Name</label>

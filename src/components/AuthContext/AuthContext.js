@@ -34,7 +34,7 @@ const AuthProvider = ({ children }) => {
 
     const fetchUser = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/user');
+        const response = await axios.get('https://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com/api/user');
         setUser(response.data);
       } catch (error) {
         console.error('Error fetching user:', error);
@@ -47,7 +47,7 @@ const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('http://127.0.0.1:5000/login', { email, password });
+      const response = await axios.post('https://ec2-3-107-93-162.ap-southeast-2.compute.amazonaws.com/api/login', { email, password });
       const token = response.data.token;
       localStorage.setItem('token', token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;

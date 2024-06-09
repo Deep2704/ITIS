@@ -14,12 +14,13 @@ form {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.90); /* Completely opaque */
+  background-color: rgba(255, 255, 255, 0.9); /* Completely opaque */
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); /* Increased shadow depth */
-  width: 100%;
-  max-width: 3px; /* Adjust the width as needed */
+  width: 90%;
+  max-width: 400px; /* Adjust the width as needed */
+  margin: 0 auto; /* Center the form horizontally */
 }
 
 h1 {
@@ -30,12 +31,9 @@ h1 {
 .registerInputContainer {
   width: 100%;
   margin-bottom: 20px;
-  position: relative; /* Added for positioning */
 }
 
 .registerLabel {
-  display: block;
-  margin-bottom: 5px;
   font-size: 14px;
   color: #333;
   text-align: left; /* Align label text to the left */
@@ -47,38 +45,21 @@ h1 {
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
-  max-width: 320px; /* Ensure the input field width matches the button */
 }
 
-.emailInputWrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-
-.verifyEmailText {
-  font-size: 12px;
-  color: #007acc;
-  cursor: pointer;
-  text-decoration: underline;
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-}
-
+.emailInputWrapper,
 .verificationCodeWrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.verifyEmailText,
 .verifyCodeText {
   font-size: 12px;
   color: #007acc;
   cursor: pointer;
   text-decoration: underline;
-  margin-left: 10px;
 }
 
 .verificationMessage {

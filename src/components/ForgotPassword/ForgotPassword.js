@@ -93,7 +93,7 @@ const ForgotPassword = () => {
 
   return (
     <div className={forgotstyle.forgot}>
-      <form>
+      <form className="forgot-form">
         <h1>Forgot Password</h1>
         <div className={forgotstyle.inputContainer}>
           <label>Email</label>
